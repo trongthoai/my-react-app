@@ -32,7 +32,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ mode, setMode }) => {
         setSelected={setSelected}
       />
 
-      {/* ✅ FIX TẠI ĐÂY */}
       <Box
         component="main"
         sx={{

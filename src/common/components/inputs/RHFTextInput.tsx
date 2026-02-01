@@ -1,22 +1,23 @@
 import { forwardRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import type { TextInputProps } from "./TextInput";
 import TextInput from "./TextInput";
+import type { BaseFieldProps } from "../../../sidebar/types";
 
-export type RHFTextInputProps = TextInputProps & {
-  name: string;
-  label: string;
-  required?: boolean;
+interface RHFTextInputProps extends BaseFieldProps {
   maxLength?: number;
-};
+}
 
 const RHFTextInput = forwardRef<HTMLInputElement, RHFTextInputProps>(
-  ({ name, label, required, maxLength, ...props }, ref) => {
+  ({ name, label, required, maxLength, disabled, readOnly, ...props }, ref) => {
     const methods = useFormContext();
 
     if (!methods) {
       throw new Error("RHFTextInput must be used inside FormProvider");
     }
+
+    const formMode = document.querySelector('form')?.getAttribute('data-form-mode') ?? "create";
+
+    const isReadOnly = readOnly || formMode === 'view';
 
     const { control } = methods;
 
@@ -25,8 +26,8 @@ const RHFTextInput = forwardRef<HTMLInputElement, RHFTextInputProps>(
         name={name}
         control={control}
         rules={{
-            required: required ? `${label} is required` : false,
-            maxLength: maxLength
+          required: required ? `${label} is required` : false,
+          maxLength: maxLength
             ? { value: maxLength, message: `Max ${maxLength} characters` }
             : undefined,
         }}
@@ -40,6 +41,22 @@ const RHFTextInput = forwardRef<HTMLInputElement, RHFTextInputProps>(
             label={label}
             required={required}
             maxLength={maxLength}
+            disabled={disabled}
+            readOnly={isReadOnly}
+            sx={{
+              ...(isReadOnly && {
+                pointerEvents: "none", // chặn focus chuột
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgba(0,0,0,0.12)", // ❌ bỏ viền cam
+                    borderWidth: 1,
+                  },
+                },
+                "& .MuiInputBase-input.Mui-disabled": {
+                  WebkitTextFillColor: "rgba(0,0,0,0.87)", // text không bị mờ
+                },
+              }),
+            }}
           />
         )}
       />

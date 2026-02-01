@@ -9,6 +9,8 @@ export type TextInputProps = Omit<TextFieldProps, "size"> & {
   uiWidth?: UIWidth;
   required?: boolean;
   maxLength?: number;
+  readOnly?: boolean;
+
 };
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -19,6 +21,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       uiWidth = "full",
       required,
       maxLength,
+      disabled = false,
+      readOnly = false,
       ...rest
     },
     ref
@@ -34,6 +38,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         slotProps={{
           htmlInput: {
             maxLength,
+            readOnly,
+            disabled,
           },
         }}
         sx={{

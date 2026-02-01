@@ -15,6 +15,8 @@ export type DatePickerInputProps = Omit<
   uiSize?: UISize;
   uiWidth?: UIWidth;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 };
 
 const DatePickerInput = forwardRef<HTMLInputElement, DatePickerInputProps>(
@@ -26,6 +28,8 @@ const DatePickerInput = forwardRef<HTMLInputElement, DatePickerInputProps>(
       uiSize = "md",
       uiWidth = "full",
       required,
+      disabled = false,
+      readOnly = false,
       ...rest
     },
     ref
@@ -35,6 +39,8 @@ const DatePickerInput = forwardRef<HTMLInputElement, DatePickerInputProps>(
         {...rest}
         value={value ?? null}
         onChange={onChange}
+        readOnly={readOnly}
+        disabled={disabled}
         slotProps={{
           textField: {
             label,

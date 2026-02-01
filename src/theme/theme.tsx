@@ -10,5 +10,14 @@ export const getTheme = (mode: "light" | "dark") =>
       background: {
         default: mode === "dark" ? "#121212" : "#f7f7f7"
       }
+    },
+    components: {
+      MuiFormLabel: {
+        styleOverrides: {
+          asterisk: {
+            color: "red",
+          },
+        },
+      },
     }
   });

@@ -15,6 +15,8 @@ export type SelectInputProps = Omit<TextFieldProps, "size" | "select"> & {
   uiWidth?: UIWidth;
   required?: boolean;
   options: SelectOption[];
+  readOnly?: boolean;
+  disabled?: boolean;
 };
 
 const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
@@ -24,6 +26,8 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
       uiSize = "md",
       uiWidth = "full",
       required,
+      readOnly = false,
+      disabled = false,
       options,
       ...rest
     },
@@ -44,6 +48,12 @@ const SelectInput = forwardRef<HTMLInputElement, SelectInputProps>(
             height: UI_SIZE.height[uiSize],
           },
           ...rest.sx,
+        }}
+        slotProps={{
+            htmlInput: {
+                readOnly,
+                disabled,
+            }
         }}
       >
         {options.map((opt) => (

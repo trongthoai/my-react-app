@@ -5,17 +5,23 @@ import DatePickerInput, { type DatePickerInputProps } from "./DatePickerInput";
 
 export type RHFDatePickerInputProps = DatePickerInputProps & {
   name: string;
+  disabled?: boolean;
+  readOnly?: boolean;
 };
 
 const RHFDatePickerInput = forwardRef<
   HTMLInputElement,
   RHFDatePickerInputProps
->(({ name, ...props }, ref) => {
+>(({ name, disabled = false, readOnly = false, ...props }, ref) => {
   const methods = useFormContext();
 
   if (!methods) {
     throw new Error("RHFDatePickerInput must be used inside FormProvider");
   }
+
+  const formMode = document.querySelector('form')?.getAttribute('data-form-mode') ?? "create";
+
+  const isReadOnly = readOnly || formMode === 'view';
 
   const { control } = methods;
 
@@ -36,6 +42,22 @@ const RHFDatePickerInput = forwardRef<
               error: !!fieldState.error,
               helperText: fieldState.error?.message,
             },
+          }}
+          disabled={disabled}
+          readOnly={isReadOnly}
+          sx={{
+            ...(isReadOnly && {
+              pointerEvents: "none", // chặn focus chuột
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgba(0,0,0,0.12)", // ❌ bỏ viền cam
+                  borderWidth: 1,
+                },
+              },
+              "& .MuiInputBase-input.Mui-disabled": {
+                WebkitTextFillColor: "rgba(0,0,0,0.87)", // text không bị mờ
+              },
+            }),
           }}
         />
       )}

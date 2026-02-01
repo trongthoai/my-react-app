@@ -16,6 +16,10 @@ export const FormActions = ({
         formState: { isSubmitting, isDirty },
     } = useFormContext();
 
+    const formMode = document.querySelector('form')?.getAttribute('data-form-mode') ?? "create";
+
+    if (formMode === "view") return null;
+
     return (
         <Box
             mt={3}
