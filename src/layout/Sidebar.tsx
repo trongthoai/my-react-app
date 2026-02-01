@@ -1,6 +1,7 @@
 import { Drawer, Divider, List } from "@mui/material";
 import { menuConfig } from "../sidebar/menuConfig";
 import SidebarItem from "../sidebar/SidebarItem";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -16,24 +17,26 @@ const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
   width,
   collapsedWidth,
-  selected,
-  setSelected
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <Drawer
       variant="permanent"
       sx={{
         width: collapsed ? collapsedWidth : width,
-        "& .MuiDrawer-paper": {
+        '& .MuiDrawer-paper': {
           width: collapsed ? collapsedWidth : width,
           top: `${APP_BAR_HEIGHT}px`,
           height: `calc(100% - ${APP_BAR_HEIGHT}px)`,
-          transition: "width 0.3s",
-          overflowX: "hidden"
-        }
+          transition: 'width 0.3s',
+          overflowX: 'hidden',
+        },
       }}
     >
       <Divider />
+
       <List>
         {menuConfig.map((item) => (
           <SidebarItem
@@ -41,8 +44,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             item={item}
             collapsed={collapsed}
             level={0}
-            selected={selected}
-            setSelected={setSelected}
+            pathname={location.pathname}
+            onNavigate={navigate}
           />
         ))}
       </List>

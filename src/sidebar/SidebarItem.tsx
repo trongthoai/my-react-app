@@ -3,41 +3,51 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
-  List
-} from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { useState } from "react";
-import type { SidebarMenuItem } from "./types";
+} from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { useState } from 'react';
+import type { MenuItem } from '../layout/menu';
 
 interface SidebarItemProps {
-  item: SidebarMenuItem;
+  item: MenuItem;
   collapsed: boolean;
   level: number;
-  selected: string;
-  setSelected: (id: string) => void;
+  pathname: string;
+  onNavigate: (path: string) => void;
 }
+
+const isActiveRoute = (route?: string, pathname?: string) => {
+  if (!route || !pathname) return false;
+  return pathname.startsWith(route.replace('/:id', ''));
+};
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
   item,
   collapsed,
   level,
-  selected,
-  setSelected
+  pathname,
+  onNavigate,
 }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const hasChildren = Boolean(item.children?.length);
+  const [open, setOpen] = useState(false);
+
+  const active = isActiveRoute(item.path, pathname);
+
+  const handleClick = () => {
+    if (item.children?.length) {
+      setOpen((prev) => !prev);
+    } else if (item.path) {
+      onNavigate(item.path);
+    }
+  };
 
   return (
     <>
       <ListItemButton
-        selected={selected === item.id}
-        onClick={() => {
-          setSelected(item.id);
-          if (hasChildren) setOpen((prev) => !prev);
-        }}
+        onClick={handleClick}
+        selected={active}
         sx={{
           pl: collapsed ? 1.5 : 2 + level * 2,
-          justifyContent: collapsed ? "center" : "flex-start",
+          justifyContent: collapsed ? 'center' : 'flex-start',
           "&.Mui-selected": {
             bgcolor: "primary.main",
             color: "#fff",
@@ -47,38 +57,35 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           }
         }}
       >
-        {item.icon && (
-          <ListItemIcon
-            sx={{
-              minWidth: 0,
-              mr: collapsed ? 0 : 2,
-              justifyContent: "center"
-            }}
-          >
-            {item.icon}
-          </ListItemIcon>
-        )}
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: collapsed ? 0 : 2,
+            justifyContent: 'center',
+          }}
+        >
+          {item?.icon}
+        </ListItemIcon>
 
         {!collapsed && <ListItemText primary={item.label} />}
 
-        {!collapsed && hasChildren &&
-          (open ? <ExpandLess /> : <ExpandMore />)}
+        {!collapsed && item.children && (
+          open ? <ExpandLess /> : <ExpandMore />
+        )}
       </ListItemButton>
 
-      {hasChildren && (
-        <Collapse in={open} timeout="auto">
-          <List disablePadding>
-            {item.children!.map((child) => (
-              <SidebarItem
-                key={child.id}
-                item={child}
-                collapsed={collapsed}
-                level={level + 1}
-                selected={selected}
-                setSelected={setSelected}
-              />
-            ))}
-          </List>
+      {item.children && (
+        <Collapse in={open && !collapsed} timeout="auto" unmountOnExit>
+          {item.children.map((child) => (
+            <SidebarItem
+              key={child.id}
+              item={child}
+              collapsed={collapsed}
+              level={level + 1}
+              pathname={pathname}
+              onNavigate={onNavigate}
+            />
+          ))}
         </Collapse>
       )}
     </>

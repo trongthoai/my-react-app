@@ -6,4 +6,5 @@ export interface SidebarMenuItem {
   label: string;
   icon?: ReactNode;
   children?: SidebarMenuItem[];
+  path?: string;
 }

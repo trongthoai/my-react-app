@@ -7,32 +7,32 @@ import {
 } from '@mui/icons-material';
 
 export type MenuItem = {
-  key: string;
+  id: string;
   label: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   path?: string;
   children?: MenuItem[];
 };
 
 export const menu: MenuItem[] = [
   {
-    key: 'users',
+    id: 'users',
     label: 'Users',
     icon: <People />,
     children: [
       {
-        key: 'user-list',
+        id: 'user-list',
         label: 'User List',
         icon: <List />,
         path: '/users',
       },
       {
-        key: 'user-detail',
+        id: 'user-detail',
         label: 'User Detail',
         icon: <Person />,
         children: [
           {
-            key: 'user-security',
+            id: 'user-security',
             label: 'Security',
             icon: <Security />,
             path: '/users/security',
@@ -42,7 +42,7 @@ export const menu: MenuItem[] = [
     ],
   },
   {
-    key: 'settings',
+    id: 'settings',
     label: 'Settings',
     icon: <Settings />,
     path: '/settings',

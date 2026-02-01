@@ -2,6 +2,7 @@ import { Box, Toolbar } from "@mui/material";
 import { useState } from "react";
 import TopAppBar from "./TopAppBar";
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
 interface AppLayoutProps {
   mode: "light" | "dark";
@@ -44,7 +45,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ mode, setMode }) => {
         }}
       >
         <Toolbar />
-        Content Area – Selected: <b>{selected || "None"}</b>
+        <Outlet />
       </Box>
     </Box>
   );
